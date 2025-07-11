@@ -17,6 +17,7 @@ use App\Http\Controllers\ScreeningController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
+// ==================== Auth ====================
 Route::prefix('auth')->group(function () {
     Route::post('/register', [RegisteredUserController::class, 'store'])
         ->middleware('guest')
@@ -26,41 +27,30 @@ Route::prefix('auth')->group(function () {
         ->middleware('guest')
         ->name('auth.login');
 
-    Route::post('/forgot-password/send-otp', [AuthenticatedSessionController::class, 'sendOtp']);
-    Route::post('/forgot-password/verify-otp', [AuthenticatedSessionController::class, 'verifyOtp']);
-    Route::post('/forgot-password/reset', [AuthenticatedSessionController::class, 'resetPassword']);
-    Route::middleware('auth:sanctum')->post('/change-password', [AuthenticatedSessionController::class, 'changePassword']);
-    Route::middleware('auth:sanctum')->delete('/delete-account', [AuthenticatedSessionController::class, 'deleteAccount']);
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->middleware('auth:sanctum')
-        ->name('auth.logout');
+    Route::post('/forgot-password/send-otp', [PasswordResetLinkController::class, 'sendOtp']);
+    Route::post('/forgot-password/verify-otp', [PasswordResetLinkController::class, 'verifyOtp']);
+    Route::post('/forgot-password/reset', [NewPasswordController::class, 'resetPassword']);
 
-
-
-    // Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-    //     ->middleware('guest')
-    //     ->name('auth.password.email');
-
-    // Route::post('/reset-password', [NewPasswordController::class, 'store'])
-    //     ->middleware('guest')
-    //     ->name('auth.password.store');
-
-    // Route::get('/verify-email/{id}/{hash}', VerifyEmailController::class)
-    //     ->middleware(['auth', 'signed', 'throttle:6,1'])
-    //     ->name('auth.verification.verify');
-
-    // Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-    //     ->middleware(['auth', 'throttle:6,1'])
-    //     ->name('auth.verification.send');
-
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/change-password', [NewPasswordController::class, 'changePassword']);
+        Route::delete('/delete-account', [AuthenticatedSessionController::class, 'deleteAccount']);
+        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+            ->name('auth.logout');
+    });
 });
 
-Route::middleware('auth:sanctum')->get('/fact-myths', [FactMythController::class, 'index']);
-Route::middleware('auth:sanctum')->get('/fact-myths/{id}', [FactMythController::class, 'show']);
+// ==================== Fact Myths ====================
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/fact-myths', [FactMythController::class, 'index']);
+    Route::get('/fact-myths/{id}', [FactMythController::class, 'show']);
+});
+
+// ==================== Feed ====================
 Route::middleware('auth:sanctum')->prefix('feed')->group(function () {
     Route::get('/posts', [PostController::class, 'index']);
     Route::post('/posts', [PostController::class, 'store']);
     Route::delete('/posts/{id}', [PostController::class, 'destroy']);
+
     Route::post('/posts/{id}/likes', [PostLikeController::class, 'store']);
     Route::delete('/posts/{id}/likes', [PostLikeController::class, 'destroy']);
 
@@ -69,18 +59,22 @@ Route::middleware('auth:sanctum')->prefix('feed')->group(function () {
     Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
 });
 
+// ==================== Screening ====================
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/screening-questions', [ScreeningController::class, 'questions']);
     Route::post('/screening-answers', [ScreeningController::class, 'submitAnswers']);
     Route::get('/screening-sessions/{id}', [ScreeningController::class, 'show']);
 
+    // ==================== Reminders ====================
     Route::get('/reminders', [ReminderController::class, 'index']);
     Route::post('/reminders', [ReminderController::class, 'store']);
 
     Route::get('/reminder-logs', [ReminderLogController::class, 'index']);
     Route::post('/reminder-logs', [ReminderLogController::class, 'store']);
+
+    // ==================== Educational Contents ====================
+    Route::get('/educational-contents', [EducationalContentController::class, 'index']);
+
+    // ==================== User Profile ====================
+    Route::get('/user/profile', [UserProfileController::class, 'show']);
 });
-
-Route::middleware('auth:sanctum')->get('/educational-contents', [EducationalContentController::class, 'index']);
-
-Route::middleware('auth:sanctum')->get('/user/profile', [UserProfileController::class, 'show']);
