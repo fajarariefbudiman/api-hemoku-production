@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
 
         if (!Auth::attempt($credentials)) {
             return response()->json([
-                'message' => 'Kredensial tidak valid.'
+                'message' => 'Email atau kata sandi salah. Mohon periksa kembali kredensial Anda.'
             ], 401);
         }
 

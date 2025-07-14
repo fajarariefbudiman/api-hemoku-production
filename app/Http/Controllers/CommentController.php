@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,22 +30,29 @@ class CommentController extends Controller
         return response()->json(CommentResource::collection($comments), 200);
     }
 
-    public function store(Request $request, $id)
+    public function store(StoreCommentRequest $request, $id)
     {
-        $request->validate([
-            'content' => 'required|string|max:1000',
-        ]);
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Anda tidak diizinkan mengakses sumber daya ini. Mohon login terlebih dahulu.'
+            ], 401);
+        }
 
         $post = Post::find($id);
         if (!$post) {
-            return response()->json(['message' => 'Postingan tidak ditemukan.'], 404);
+            return response()->json([
+                'message' => 'Postingan tidak ditemukan.'
+            ], 404);
         }
 
         $comment = Comment::create([
             'post_id' => $post->id,
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
             'content' => $request->content,
         ]);
+
         $post->increment('comments_count');
 
         return response()->json(new CommentResource($comment->load('user')), 201);

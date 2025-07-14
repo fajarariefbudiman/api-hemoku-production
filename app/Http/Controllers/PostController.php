@@ -42,9 +42,15 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'content' => 'required|string|max:1000'
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'content' => 'required|string|max:1000'
+            ],
+            [
+                'content.required' => 'Form wajib diisi.'
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json([
@@ -60,6 +66,7 @@ class PostController extends Controller
 
         return response()->json(new PostResource($post->load('user')), 201);
     }
+
 
     /**
      * Display the specified resource.

@@ -3,9 +3,20 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class RegisterUserRequest extends FormRequest
 {
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'message' => 'Terjadi kesalahan pada data yang Anda kirimkan. Mohon periksa kembali.',
+            'errors' => $validator->errors()
+        ], 422));
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -21,13 +32,16 @@ class RegisterUserRequest extends FormRequest
      */
     public function rules(): array
     {
-         return [
+        return [
             'fullname' => 'required|string|max:255',
             'gender' => 'required|in:male,female,other',
             'email' => 'required|email|unique:users,email',
             'birth_date' => 'required|date',
             'password' => 'required|string|min:8|confirmed',
-            'phone_number' => 'required|string|max:20',
+            'phone_number' => [
+                'required',
+                'regex:/^(\+62|62|08)\s?[0-9]{8,12}$/'
+            ],
         ];
     }
 
@@ -41,6 +55,7 @@ class RegisterUserRequest extends FormRequest
             'password.required' => 'Kata sandi wajib diisi.',
             'password.min' => 'Kata sandi minimal 8 karakter.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
+            'phone_number.regex' => 'Format nomor HP harus nomor Indonesia yang valid (misalnya +62812xxxxxxx atau 62812xxxxxxx).',
         ];
     }
 }

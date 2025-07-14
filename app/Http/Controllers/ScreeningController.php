@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ScreeningAnswerRequest;
 use App\Models\ScreeningAnswer;
 use App\Models\ScreeningQuestion;
 use App\Models\ScreeningSessions;
@@ -28,13 +29,8 @@ class ScreeningController extends Controller
         return response()->json($session);
     }
 
-    public function submitAnswers(Request $request)
+    public function submitAnswers(ScreeningAnswerRequest $request)
     {
-        $request->validate([
-            '*.question_id' => 'required|exists:screening_questions,id',
-            '*.answer' => 'required|string',
-        ]);
-
         $user = Auth::user();
         $answers = $request->all();
         $score = 0;

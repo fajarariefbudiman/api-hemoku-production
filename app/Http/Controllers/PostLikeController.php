@@ -10,24 +10,41 @@ use Illuminate\Support\Facades\Auth;
 class PostLikeController extends Controller
 {
     //
-    public function store($id)
-    {
-        $user = Auth::user();
-        $post = Post::findOrFail($id);
-
-        if ($post->likedBy()->where('user_id', $user->id)->exists()) {
-            return response()->json(['message' => 'Anda sudah menyukai postingan ini.'], 200);
-        }
-
-        $post->likedBy()->attach($user->id);
-        $post->increment('likes_count');
-
-        return response()->json(['message' => 'Postingan berhasil di-like.'], 200);
+   public function store($id)
+{
+    $user = Auth::user();
+    if (!$user) {
+        return response()->json([
+            'message' => 'Anda tidak diizinkan mengakses sumber daya ini. Mohon login terlebih dahulu.'
+        ], 401);
     }
+
+    $post = Post::find($id);
+    if (!$post) {
+        return response()->json([
+            'message' => 'Postingan tidak ditemukan.'
+        ], 404);
+    }
+
+    if ($post->likedBy()->where('user_id', $user->id)->exists()) {
+        return response()->json([
+            'message' => 'Anda sudah menyukai postingan ini.'
+        ], 200);
+    }
+
+    // Tambahkan like
+    $post->likedBy()->attach($user->id);
+    $post->increment('likes_count');
+
+    return response()->json([
+        'message' => 'Postingan berhasil di-like.'
+    ], 200);
+}
     public function destroy($id)
     {
         $user = Auth::user();
         $post = Post::findOrFail($id);
+
 
         if (!$post->likedBy()->where('user_id', $user->id)->exists()) {
             return response()->json(['message' => 'Anda belum menyukai postingan ini.'], 200);
