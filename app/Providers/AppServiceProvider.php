@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
                 File::put($dbPath, '');
             }
             config(['database.connections.sqlite.database' => $dbPath]);
+            DB::purge('sqlite');
+            DB::reconnect('sqlite');
         }
     }
 }
