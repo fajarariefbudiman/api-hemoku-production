@@ -24,10 +24,15 @@ class AppServiceProvider extends ServiceProvider
         ResetPassword::createUrlUsing(function (object $notifiable, string $token) {
             return config('app.frontend_url') . "/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}";
         });
-        if (config('database.default') === 'sqlite') {
+        if (app()->environment('production', 'staging')) {
             $dbPath = database_path('database.sqlite');
-            if (!File::exists($dbPath)) {
-                File::put($dbPath, '');
+
+            if (!file_exists($dbPath)) {
+                file_put_contents($dbPath, '');
+            }
+
+            if (!is_writable($dbPath)) {
+                chmod($dbPath, 0666);
             }
         }
     }
