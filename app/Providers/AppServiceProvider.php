@@ -30,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
             if (!file_exists($dbPath)) {
                 File::put($dbPath, '');
             }
+            config(['database.connections.sqlite.database' => $dbPath]);
         }
     }
 }
