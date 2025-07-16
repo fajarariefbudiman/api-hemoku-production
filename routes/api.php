@@ -61,7 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/screening-questions', [ScreeningController::class, 'questions']);//
     Route::post('/screening-answers', [ScreeningController::class, 'submitAnswers']);
     Route::get('/screening-sessions', [ScreeningController::class, 'index']);
-    Route::get('/screening-sessions/{id}', [ScreeningController::class, 'show']);
+    Route::get('/screening-session', [ScreeningController::class, 'show']);
 
     // ==================== Reminders ====================
     Route::get('/reminders', [ReminderController::class, 'index']);
