@@ -18,16 +18,30 @@ class ScreeningController extends Controller
         return ScreeningQuestion::all();
     }
 
-    public function show($id)
+    public function index()
     {
-        $session = ScreeningSessions::with('answers')->findOrFail($id);
+        $sessions = ScreeningSessions::with('answers')
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        if ($session->user_id !== Auth::id()) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+        return response()->json($sessions);
+    }
+
+    public function showLatest()
+    {
+        $session = ScreeningSessions::with('answers')
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if (!$session) {
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
 
         return response()->json($session);
     }
+
 
     public function submitAnswers(ScreeningAnswerRequest $request)
     {
@@ -44,25 +58,13 @@ class ScreeningController extends Controller
 
         $riskData = ScreeningSessions::evaluateRisk($score);
 
-        $session = ScreeningSessions::where('user_id', $user->id)->latest()->first();
-
-        if ($session) {
-            $session->update([
-                'score' => $score,
-                'risk_level' => $riskData['risk_level'],
-                'risk_description' => $riskData['risk_description'],
-                'next_step' => $riskData['next_step'],
-            ]);
-            $session->answers()->delete();
-        } else {
-            $session = ScreeningSessions::create([
-                'user_id' => $user->id,
-                'score' => $score,
-                'risk_level' => $riskData['risk_level'],
-                'risk_description' => $riskData['risk_description'],
-                'next_step' => $riskData['next_step'],
-            ]);
-        }
+        $session = ScreeningSessions::create([
+            'user_id' => $user->id,
+            'score' => $score,
+            'risk_level' => $riskData['risk_level'],
+            'risk_description' => $riskData['risk_description'],
+            'next_step' => $riskData['next_step'],
+        ]);
 
         foreach ($answers as $answer) {
             ScreeningAnswer::create([
