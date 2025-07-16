@@ -28,7 +28,7 @@ class ScreeningController extends Controller
         return response()->json($sessions);
     }
 
-    public function showLatest()
+    public function show()
     {
         $session = ScreeningSessions::with('answers')
             ->where('user_id', Auth::id())
