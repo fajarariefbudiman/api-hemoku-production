@@ -37,7 +37,6 @@
     "scripts": {
         "start": "php artisan serve --host=0.0.0.0 --port=8080",
         "post-install-cmd": [
-            "php artisan rollback --force",
             "php artisan migrate --force",
             "php artisan db:seed --force"
         ],
