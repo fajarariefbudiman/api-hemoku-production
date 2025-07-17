@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('educational_contents', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('title')->unique();
             $table->longText('content')->nullable();
             $table->string('section')->nullable();
             $table->text('description')->nullable();
