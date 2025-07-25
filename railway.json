@@ -3,6 +3,6 @@
         "builder": "nixpacks"
     },
     "deploy": {
-        "startCommand": "php artisan config:cache && php artisan migrate --force && php artisan storage:link && php artisan serve --host=0.0.0.0 --port=$PORT"
+        "startCommand": "chmod -R 755 storage && chmod -R 755 public && php artisan storage:link && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
     }
 }
