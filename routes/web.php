@@ -8,7 +8,7 @@ Route::get('/', function () {
 });
 
 Route::get('/storage/posters/{filename}', function ($filename) {
-    $path = storage_path('app/public/posters/' . urldecode($filename));
+    $path = storage_path('storage/app/public/posters/' . urldecode($filename));
 
     if (!file_exists($path)) {
         abort(404);
