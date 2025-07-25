@@ -7,7 +7,7 @@ Route::get('/', function () {
     return ['Laravel' => app()->version()];
 });
 
-Route::get('/poster-public/{filename}', function ($filename) {
+Route::get('/storage/posters/{filename}', function ($filename) {
     $path = storage_path('app/public/posters/' . urldecode($filename));
 
     if (!file_exists($path)) {
