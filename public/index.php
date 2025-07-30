@@ -3,8 +3,6 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
-$_SERVER['SCRIPT_NAME'] = str_replace('/hemoku', '', $_SERVER['SCRIPT_NAME']);
-$_SERVER['PHP_SELF'] = str_replace('/hemoku', '', $_SERVER['PHP_SELF']);
 define('LARAVEL_START', microtime(true));
 
 // Determine if the application is in maintenance mode...
