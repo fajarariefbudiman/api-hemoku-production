@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         if (app()->environment('production', 'staging')) {
-            $dbPath = '/database/database.sqlite';
+            $dbPath = 'database/database.sqlite';
 
             if (!file_exists($dbPath)) {
                 File::put($dbPath, '');
