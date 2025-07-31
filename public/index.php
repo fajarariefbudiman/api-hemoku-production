@@ -1,6 +1,6 @@
 <?php
-$_SERVER['SCRIPT_NAME'] = str_replace('/api-hemoku-production', '', $_SERVER['SCRIPT_NAME']);
-$_SERVER['PHP_SELF'] = str_replace('/api-hemoku-production', '', $_SERVER['PHP_SELF']);
+// $_SERVER['SCRIPT_NAME'] = str_replace('/api-hemoku-production', '', $_SERVER['SCRIPT_NAME']);
+// $_SERVER['PHP_SELF'] = str_replace('/api-hemoku-production', '', $_SERVER['PHP_SELF']);
 
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
