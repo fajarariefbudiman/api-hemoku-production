@@ -4,11 +4,20 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class EducationalContentSeeder extends Seeder
 {
     public function run(): void
     {
+        $source = database_path('seeders/files/posters');
+        $destination = storage_path('app/public/posters');
+
+        if (!File::exists($destination)) {
+            File::makeDirectory($destination, 0755, true);
+        }
+
+        File::copyDirectory($source, $destination);
         DB::table('educational_contents')->insert([
             [
                 'title' => 'Kenali Anemia',
