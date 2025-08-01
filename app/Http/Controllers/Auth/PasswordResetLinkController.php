@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ForgotPasswordOtpRequest;
+use App\Mail\SendOtpMail;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -27,10 +28,7 @@ class PasswordResetLinkController extends Controller
 
         Cache::put('otp_' . $email, $otp, now()->addMinutes(10));
 
-        Mail::raw("Kode OTP Anda untuk reset kata sandi adalah: $otp", function ($message) use ($email) {
-            $message->to($email)
-                ->subject('Kode OTP Reset Password');
-        });
+        Mail::to($email)->send(new SendOtpMail($otp));
 
         return response()->json([
             'message' => 'Kode OTP berhasil dikirim ke email Anda. Silakan cek kotak masuk.'
