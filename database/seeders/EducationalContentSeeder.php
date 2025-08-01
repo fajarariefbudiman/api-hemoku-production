@@ -97,7 +97,7 @@ class EducationalContentSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'title' => 'Pencegahan dan Penanggunlangan Anemia',
+                'title' => 'Pencegahan dan Penanggulangan Anemia',
                 'type' => 'poster',
                 'section' => 'Poster',
                 'description' => 'Strategi efektif mencegah dan menangani anemia pada remaja dan wanita usia subur.',
