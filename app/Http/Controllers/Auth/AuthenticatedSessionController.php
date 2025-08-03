@@ -21,20 +21,22 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $credentials = [
+            'password' => $request->password,
+        ];
+
+        if ($request->filled('email')) {
+            $credentials['email'] = $request->email;
+        } else {
+            $credentials['phone_number'] = $request->phone_number;
+        }
 
         if (!Auth::attempt($credentials)) {
-            return response()->json([
-                'message' => 'Email atau kata sandi salah. Mohon periksa kembali kredensial Anda.'
-            ], 401);
+            return response()->json(['message' => 'Email atau kata sandi salah. Mohon periksa kembali kredensial Anda.'], 401);
         }
 
         $user = Auth::user();
         $token = $request->user()->createToken('auth_token');
-
 
         return response()->json([
             'access_token' => $token->plainTextToken,

@@ -164,17 +164,6 @@ class EducationalContentSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'title' => 'Tetap Segar Sepanjang Hari',
-                'type' => 'video',
-                'section' => 'Video',
-                'description' => 'Video ajakan dari Dion Wiyoko untuk menjaga kesegaran dan kebersihan tubuh sepanjang hari.',
-                'content' => 'Video singkat ini menampilkan Dion Wiyoko yang mengajak penonton untuk tetap aktif dan menjaga kesegaran tubuh, terutama setelah beraktivitas. Meskipun bukan video edukasi kesehatan spesifik, ini bisa dikaitkan dengan gaya hidup aktif yang mendukung kesehatan secara umum. Kampanye #StayCool24/7 menekankan pentingnya kebersihan diri untuk kenyamanan dan kepercayaan diri.',
-                'url' => 'https://www.youtube.com/embed/-vQDKE4QsHM?si=s89vLXNJUVQa7ZIx',
-                'order' => 14,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
                 'title' => 'Manfaat Tablet Tambah Darah',
                 'type' => 'video',
                 'section' => 'Video',

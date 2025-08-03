@@ -36,10 +36,21 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email' => 'required_without:phone_number|email',
+            'phone_number' => ['required_without:email', 'regex:/^08[0-9]{8,12}$/'],
             'password' => ['required', 'string'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'Email wajib diisi dan dengan format yang sesuai.',
+            'phone_number.required' => 'No Hp wajib diisi dengan benar',
+            'password.required' => 'Password wajib diisi.',
+        ];
+    }
+
 
     /**
      * Attempt to authenticate the request's credentials.
@@ -89,6 +100,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->input('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->input('email')) . '|' . $this->ip());
     }
 }
