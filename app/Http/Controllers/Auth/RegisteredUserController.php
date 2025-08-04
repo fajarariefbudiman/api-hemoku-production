@@ -24,16 +24,16 @@ class RegisteredUserController extends Controller
     {
         try {
             $data = $request->validated();
-            $phone = str_replace(' ', '', $data['phone_number']);
 
             $user = User::create([
                 'fullname'      => $data['fullname'],
                 'gender'        => $data['gender'],
-                'email'         => $data['email'],
+                'email'         => $data['email'] ?? null,
                 'birth_date'    => $data['birth_date'],
-                'phone_number'  => $phone,
+                'phone_number'  => isset($data['phone_number']) ? str_replace(' ', '', $data['phone_number']) : null,
                 'password'      => Hash::make($data['password']),
             ]);
+
 
             return response()->json([
                 'id' => $user->id,
